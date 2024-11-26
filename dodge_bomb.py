@@ -39,8 +39,6 @@ def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
         bb_img.append(bb_img)
     return bb_img, bb_accs
 
-
-
     # accs = [a for a in range(1, 11)]
 
 
@@ -73,6 +71,13 @@ def main():
     clock = pg.time.Clock()
     tmr = 0
 
+    # stage = min(tmr//500, 9) # 爆弾の大きさを0~9の範囲に収める
+    # bb_img = bb_img[stage]
+    # spped_multiplier = bb_accs[stage]
+    # vx, vy = vx * spped_multiplier, vy * spped_multiplier
+    # bb_rct.move_ip(vx, vy) # 爆弾を動かす
+    # vx, vy = vx / spped_multiplier, vy / spped_multiplier
+
 
     while True:
         for event in pg.event.get():
@@ -93,13 +98,7 @@ def main():
                 sum_mv[1] += tpl[1]
 
         # 時間に応じて爆弾を拡大＆加速
-        # stage = min(tmr//500, 9) # 爆弾の大きさを0~9の範囲に収める
-        # bb_img = bb_img[stage]
-        # spped_multiplier = bb_accs[stage]
-        # vx, vy = vx * spped_multiplier, vy * spped_multiplier
-        # bb_rct.move_ip(vx, vy) # 爆弾を動かす
-        # vx, vy = vx / spped_multiplier, vy / spped_multiplier
-
+        
         
         kk_rct.move_ip(sum_mv)
         # こうかとんが画面外なら、元の場所に戻す
