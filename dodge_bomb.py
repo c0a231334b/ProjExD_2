@@ -27,9 +27,7 @@ def game_over(screen: pg.Surface) -> None:
     screen.blit(go_img, [720, 290]) #こうかとんの右側の画像を表示
     screen.blit(txt, [400, 300])
     pg.display.update()
-    time.sleep(2)
-
-    # go_img = pg.transform.rotozoom(pg.image.load("fig/8.png"), 0, 0.9)
+    time.sleep(5)
 
 
 def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
