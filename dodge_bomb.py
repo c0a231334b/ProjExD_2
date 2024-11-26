@@ -2,6 +2,7 @@ import os
 import random
 import sys
 import pygame as pg
+import time
 
 
 WIDTH, HEIGHT = 1100, 650
@@ -12,6 +13,24 @@ DELTA = {
     pg.K_RIGHT: (5, 0), 
 }
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+
+def game_over(screen: pg.Surface) -> None:
+    go_bg = pg.Surface((1100, 650))
+    pg.draw.rect(go_bg, (0, 0, 0), [0, 0, 1100, 650])
+    go_bg.set_alpha(210)
+    screen.blit(go_bg, [0, 0])  # blit: 画面に描画する
+    fonto = pg.font.Font(None, 80)
+    txt = fonto.render("Game Over", True, (255, 255, 255))
+    go_img = pg.transform.rotozoom(pg.image.load("fig/8.png"), 0, 0.9)
+    screen.blit(go_img, [340, 290]) #こうかとんの左側の画像を表示
+    screen.blit(go_img, [720, 290]) #こうかとんの右側の画像を表示
+    screen.blit(txt, [400, 300])
+    pg.display.update()
+    time.sleep(2)
+
+    # go_img = pg.transform.rotozoom(pg.image.load("fig/8.png"), 0, 0.9)
+
 
 def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
     """
@@ -36,18 +55,24 @@ def main():
     bb_img = pg.Surface((20, 20)) # 爆弾用の空urface
     pg.draw.circle(bb_img, (255, 0, 0), (10, 10), 10) # 爆弾円を描画
     bb_img.set_colorkey((0, 0, 0)) # 爆弾の黒色を透明化
-    bb_rct = kk_img.get_rect() # 爆弾rectの抽出
+    bb_rct = bb_img.get_rect() # 爆弾rectの抽出
     bb_rct.center = random.randint(0, WIDTH), random.randint(0, HEIGHT) # 横用の乱数と縦用の乱数を生成
     vx, vy = 5, 5 # 爆弾速度ベクトル
     clock = pg.time.Clock()
     tmr = 0
+
+    
+    
+
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return
         if kk_rct.colliderect(bb_rct):
+            game_over(screen)
             print("Game Over!!")
             return # ゲーム―オーバー
+        
         screen.blit(bg_img, [0, 0]) 
 
         key_lst = pg.key.get_pressed()
