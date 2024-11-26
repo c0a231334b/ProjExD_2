@@ -19,15 +19,29 @@ def game_over(screen: pg.Surface) -> None:
     go_bg = pg.Surface((1100, 650))
     pg.draw.rect(go_bg, (0, 0, 0), [0, 0, 1100, 650])
     go_bg.set_alpha(210)
-    screen.blit(go_bg, [0, 0])  # blit: 画面に描画する
+    screen.blit(go_bg, [0, 0])      # blit: 画面に描画する
     fonto = pg.font.Font(None, 80)
     txt = fonto.render("Game Over", True, (255, 255, 255))
     go_img = pg.transform.rotozoom(pg.image.load("fig/8.png"), 0, 0.9)
-    screen.blit(go_img, [340, 290]) #こうかとんの左側の画像を表示
-    screen.blit(go_img, [720, 290]) #こうかとんの右側の画像を表示
-    screen.blit(txt, [400, 300])
-    pg.display.update()
+    screen.blit(go_img, [340, 290]) # こうかとんの左側の画像を表示
+    screen.blit(go_img, [720, 290]) # こうかとんの右側の画像を表示
+    screen.blit(txt, [400, 300])    # Game Overの文字を表示
+    pg.display.update()             # 画面更新
     time.sleep(5)
+
+def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
+    """爆弾の画像リストと加速度リストを初期化する"""
+    bb_img = []
+    bb_accs = [1 + 0.2 * i for i in range(10)] # 爆弾の加速度リスト
+    for r in range(1, 11):
+        bb_img = pg.Surface((20*r, 20*r), pg.SRCALPHA)
+        pg.draw.circle(bb_img, (255, 0, 0), (10*r, 10*r), 10*r)
+        bb_img.append(bb_img)
+    return bb_img, bb_accs
+
+
+
+    # accs = [a for a in range(1, 11)]
 
 
 def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
@@ -59,8 +73,6 @@ def main():
     clock = pg.time.Clock()
     tmr = 0
 
-    
-    
 
     while True:
         for event in pg.event.get():
@@ -79,6 +91,15 @@ def main():
             if key_lst[key]:
                 sum_mv[0] += tpl[0]
                 sum_mv[1] += tpl[1]
+
+        # 時間に応じて爆弾を拡大＆加速
+        # stage = min(tmr//500, 9) # 爆弾の大きさを0~9の範囲に収める
+        # bb_img = bb_img[stage]
+        # spped_multiplier = bb_accs[stage]
+        # vx, vy = vx * spped_multiplier, vy * spped_multiplier
+        # bb_rct.move_ip(vx, vy) # 爆弾を動かす
+        # vx, vy = vx / spped_multiplier, vy / spped_multiplier
+
         
         kk_rct.move_ip(sum_mv)
         # こうかとんが画面外なら、元の場所に戻す
@@ -93,6 +114,7 @@ def main():
             vy *= -1
         screen.blit(bb_img, bb_rct)
         pg.display.update()
+
         tmr += 1
         clock.tick(50)
 
